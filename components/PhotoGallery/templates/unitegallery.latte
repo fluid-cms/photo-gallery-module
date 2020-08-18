@@ -1,0 +1,25 @@
+<div id="gallery-id-{$gallery->id}">
+    {foreach $photos AS $photo}
+        <img alt="{$photo->name}"
+             src="{plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, '728x390'}"
+             data-image="{plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, 'original'}"
+             data-description="{$photo->description}"
+             title="{$photo->description}"
+             style="display:none">
+    {/foreach}
+</div>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        jQuery("#gallery-id-" + {$gallery->id}).unitegallery({
+            gallery_theme: "grid",
+            gridpanel_vertical_scroll:false,
+            gridpanel_grid_align: "top",
+            thumb_width:120,
+            thumb_height:70,
+            gallery_width:'100%',
+            theme_hide_panel_under_width: 1000,
+            slider_scale_mode: "down"
+        });
+    });
+</script>

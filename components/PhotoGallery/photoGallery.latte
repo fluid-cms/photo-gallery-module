@@ -1,0 +1,28 @@
+{*<h2>Fotogalerie {$gallery->name}</h2>*}
+
+{*<p n:if="$gallery->description">{$gallery->description}</p>*}
+
+<style>
+    div.image-in-thumbnail {
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+    }
+    .row.photorow div.col-lg-3 {
+        padding-bottom: 20px;
+    }
+</style>
+
+<div class="row photorow">
+    {foreach $photos AS $photo}
+        <div class="col-lg-3 col-xs-12 col-sm-6">
+            <div class="image-in-thumbnail" style="background-image: url({plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, '464x260'});" title="{$photo->description}" alt="{$photo->description}">
+                <img class="img-responsive" style="opacity: 0;" src="{plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, '464x260'}" title="{$photo->description}" alt="{$photo->name}">
+            </div>
+        </div>
+        {if $iterator->counter %4 == 0 && $iterator->hasNext()}
+            </div>
+            <div class="row photorow">
+        {/if}
+    {/foreach}
+</div>

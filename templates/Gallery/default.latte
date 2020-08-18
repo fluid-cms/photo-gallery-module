@@ -1,0 +1,20 @@
+{block title}Fotogalerie {$gallery->name}{/block}
+
+{block content}
+    <div class="cst-heading">
+        <h1>{$gallery->name}</h1>
+    </div>
+
+    <div n:if="$noPublishedAlert" class="text-danger">
+        Tato galerie není zatím publikovaná, je viditelná pouze s patřičnými oprávněními.
+    </div>
+
+    <p n:if="$gallery->description">{$gallery->description}</p>
+
+    {magicControl photoGallery, ["gallery-" . $gallery->id, $gallery->id], 'unitegallery'}
+
+    <div n:if="isset($gallery->enable_comments) && $gallery->enable_comments" class="cst-heading">
+        <h2>Komentáře</h2>
+        {magicControl comment, ['commentGallery', 'gallery-'. $gallery->id]}
+    </div>
+{/block}

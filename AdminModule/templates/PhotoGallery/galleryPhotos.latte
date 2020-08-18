@@ -1,0 +1,140 @@
+{block content}
+    <h1 class="page-header">
+        {block title}Fotografie v galerii {$gallery->name}{/block}
+        <span class="button-area">
+            <div class="actions" class="row">
+                <span class="btn btn-success fileinput-button" title="Přidat soubory ...">
+                    <i class="fa fa-plus"></i><span class="hidden-md"> Přidat soubory ...</span>
+                </span>
+                <button type="submit" class="btn btn-primary start" disabled title="Nahrát">
+                    <i class="fa fa-upload"></i><span class="hidden-md"> Nahrát</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel" disabled title="Zrušit vše">
+                    <i class="fa fa-times-circle-o"></i><span class="hidden-md"> Zrušit vše</span>
+                </button>
+                {if !$_noLayout}
+                    <a type="reset" class="btn btn-danger" n:href="gallery" title="Zpět">
+                        <i class="fa fa-arrow-left"></i><span class="hidden-md"> Zpět</span>
+                    </a>
+                {else}
+                    <a type="reset" class="btn btn-danger" title="Zavřít" onclick="window.close();">
+                        <i class="fa fa-close"></i><span class="hidden-md"> Zavřít</span>
+                    </a>
+                {/if}
+            </div>
+        </span>
+    </h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+
+                    <form action="{plink upload! $gallery->id}">
+                        <div id="upload-zone"></div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-lg-offset-2 col-lg-8 col-md-offset-1 col-md-10 col-xs-12">
+                            <div class="row table table-striped" class="files" id="previews">
+                                <div id="template" class="file-row">
+                                    <div class="col-md-2">
+                                        <span class="preview"><img data-dz-thumbnail/></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p class="name" data-dz-name></p>
+                                        <strong class="error text-danger" data-dz-errormessage></strong>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="size" data-dz-size></p>
+                                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <button data-dz-remove class="btn btn-warning cancel">
+                                            <i class="fa fa-times-circle-o"></i> Zrušit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" n:snippet="photos">
+                        {foreach $gallery->related('photogallery_photo.photogallery_gallery_id') AS $photo}
+                            <div class="col-lg-2 col-md-3 col-xs-4 col-sm-6">
+                                <div class="thumbnail" n:attr="style => $photo->is_main ? 'border-color: #4caf50'">
+                                    <div class="image-in-thumbnail" style="background-image: url({plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, '320x240'});" title="{$photo->description}" alt="{$photo->description}">
+                                        <div class="foto-actions">
+                                            <div class="btn-group">
+                                                {*<a class="btn btn-primary btn-sm" href="#"><i class="fa fa-pencil" title="Upravit"></i></a>*}
+                                                <a n:if="!$photo->is_main" class="btn btn-success btn-sm ajax" n:href="setMain! $photo->id, $gallery->id"><i class="fa fa-star" title="Nastavit jako hlavní"></i></a>
+                                                <a class="btn btn-danger btn-sm tw-ajax" n:href="delete! $photo->id, $gallery->id" data-ajax="on" data-confirm="Opravdu chcete smazat fotografii {$photo->name}?" ><i class="fa fa-remove" title="Odstranit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="caption">
+                                        <span>{$photo->name}</span><br>
+                                        <span>velikost: {$photo->size|bytes}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+
+                    <script type="text/javascript">
+                        var previewNode = document.querySelector("#template");
+                        previewNode.id = "";
+                        var previewTemplate = previewNode.parentNode.innerHTML;
+                        previewNode.parentNode.removeChild(previewNode);
+
+                        document.addEventListener('DOMContentLoaded', function () {
+                            var myDropzone = new Dropzone("div#upload-zone", {
+                                url: {plink upload! $gallery->id},
+                                maxFilesize: 2, //MB
+                                acceptedFiles: 'image/*',
+                                thumbnailWidth: 80,
+                                thumbnailHeight: 80,
+                                parallelUploads: 3,
+                                previewTemplate: previewTemplate,
+                                autoQueue: false,
+                                previewsContainer: "#previews",
+                                clickable: ".fileinput-button"
+                            });
+
+                            myDropzone.on("addedfile", function (file) {
+                                document.querySelector(".actions .start").disabled = false;
+                                document.querySelector(".actions .cancel").disabled = false;
+                            });
+
+                            document.querySelector(".actions .start").onclick = function () {
+                                myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+                                document.querySelector(".actions .start").disabled = true;
+                                document.querySelector(".actions .cancel").disabled = false;
+                            };
+
+                            document.querySelector(".actions .cancel").onclick = function () {
+                                myDropzone.removeAllFiles(true);
+                                document.querySelector(".actions .start").disabled = true;
+                                document.querySelector(".actions .cancel").disabled = true;
+                            };
+
+                            myDropzone.on("complete", function (file) {
+                                myDropzone.removeFile(file);
+                            });
+
+                            myDropzone.on("queuecomplete", function (file) {
+                                document.querySelector(".actions .start").disabled = true;
+                                document.querySelector(".actions .cancel").disabled = true;
+                                $.nette.ajax({
+                                    'type': 'get',
+                                    'url': {plink refreshPhotos! $gallery->id}
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

@@ -1,0 +1,72 @@
+{extends $defaultTemplate}
+
+{define column-label-name}
+        Název galerie
+{/define}
+
+{define column-label-description}
+        Popis galerie
+{/define}
+
+{define column-label-is_publish}
+    Publikovaná
+{/define}
+
+{define header-cell-count}
+    <th>
+        Počet fotografií
+    </th>
+{/define}
+
+{define body-cell-is_publish}
+    <td n:class="text-center, $record->is_publish ? text-success : text-danger">
+        {if $record->is_publish}
+            <a class="tw-ajax" href="{$grid->link('rowAction!', [action => 'changePublish', primary => ($record |primaryToString)])}">
+                <span data-toggle="tooltip" title="Galerie je publikována, kliknutím zrušíte publikaci" class="text-success"><i class="fa fa-check"></i> Ano</span>
+            </a>
+        {else}
+            <a class="tw-ajax" href="{$grid->link('rowAction!', [action => 'changePublish', primary => ($record |primaryToString)])}">
+                <span data-toggle="tooltip" title="Kliknutím galerii publikujete" class="text-danger"><i class="fa fa-remove"></i> Ne</span>
+            </a>
+        {/if}
+    </td>
+{/define}
+
+{define body-cell-count}
+    <td>
+        {$record->related('photogallery_photo.photogallery_gallery_id')->count('*')}
+    </td>
+{/define}
+
+{define body-cell-name}
+    <td>
+        <a title="Zobrazit fotogalerii na webu" href="{plink :PhotoGallery:Gallery: $record->id, _noLayout=>false}" target="_blank">{$record->name} <i class="fa fa-external-link"></i></a>
+    </td>
+{/define}
+
+{define body-cell-author_id}
+    <td>
+        {if $record->author_name}{$record->author_name}{elseif $record->author_id}{$record->author->name}{/if}
+    </td>
+{/define}
+
+{define row-action-photos}
+    <a href="{$link}" class="btn btn-success btn-xs" data-toggle="tooltip" title="Spravovat fotografie">
+        <i class="fa fa-photo"></i>
+    </a>
+{/define}
+
+{define row-action-edit}
+    <a href="{$link}" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Upravit">
+        <i class="fa fa-pencil"></i>
+    </a>
+{/define}
+
+{define row-action-delete}
+    <a href="{$link}" class="btn btn-danger btn-xs tw-ajax" data-ajax="on" data-confirm="Opravdu chcete smazat fotogalerii, dojde ke smazání i veškerých fotografií?" data-toggle="tooltip" title="Smazat">
+        <i class="fa fa-times"></i>
+    </a>
+{/define}
+
+{define row-action-changePublish}
+{/define}

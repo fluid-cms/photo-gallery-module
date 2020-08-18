@@ -1,0 +1,60 @@
+parameters:
+	routing:
+		photoGallery:
+			- ['fotogalerie', 'Gallery:list']
+			- ['fotogalerie/<galleryId>-<galleryName>[/]', [presenter: Gallery, action: default, galleryName: [filterOut: [\Nette\Utils\Strings, webalize]]]]
+			- ['fotogalerie/<galleryId>[-][/]', [presenter: Gallery, action: default, galleryId: [filterIn: [@Grapesc\GrapeFluid\PhotoGalleryModule\RouteFilter\PhotoGallery, filterIn], filterOut: [@Grapesc\GrapeFluid\PhotoGalleryModule\RouteFilter\PhotoGallery, filterOut]]]]
+			- ['fotogalerie/<galleryId>-<galleryName>/<fileName>|<size>', [presenter: Photo, action: default, galleryName: [filterOut: [\Nette\Utils\Strings, webalize]]]]
+
+	backend:
+		auth:
+			photoGallery: 'Fotogalerie'
+		menu:
+			Fotogalerie:
+				order: 29
+				icon: 'file-photo-o'
+				auth: '%backend.auth.photoGallery%'
+				link: ':Admin:PhotoGallery:gallery'
+				selected:
+					- ':Admin:PhotoGallery:.*'
+
+	controls:
+		photoGallery:
+			class: Grapesc\GrapeFluid\PhotoGalleryModule\Control\PhotoGallery\PhotoGalleryControlFactory
+			desc: 'Slouží pro zobrazení fotografíí z danné galerie'
+			params:
+				limit: [int, 'DB id galerie']
+			templates:
+				unitegallery: templates/unitegallery.latte
+
+	module:
+		photoGallery:
+			directory: %appDir%/photogallery
+			galleryIdPrefix: gallery-
+
+assets:
+	photoGalleryUpload:
+		limit:
+			- ':Admin:PhotoGallery:galleryPhotos*'
+		css:
+			- '%moduleDir%/PhotoGalleryModule/assets/uploader.css'
+		js:
+			- '%vendorDir%/enyo/dropzone/dist/min/dropzone.min.js'
+
+	photoGalleryUnitegallery:
+		limit:
+			- ':PhotoGallery:Gallery:default'
+			- ':Article:ArticleDetail:default'
+		css:
+			- https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/css/unite-gallery.css
+		js:
+			- https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/js/unitegallery.min.js
+			- https://cdnjs.cloudflare.com/ajax/libs/unitegallery/1.7.40/themes/grid/ug-theme-grid.js
+
+services:
+	- Grapesc\GrapeFluid\PhotoGalleryModule\Model\GalleryModel
+	- Grapesc\GrapeFluid\PhotoGalleryModule\Model\PhotoModel
+	- Grapesc\GrapeFluid\PhotoGalleryModule\RouteFilter\PhotoGallery
+	- Grapesc\GrapeFluid\PhotoGallery\ImageRepository(%module.photoGallery.directory%, %module.photoGallery.galleryIdPrefix%)
+	- Grapesc\GrapeFluid\PhotoGallery\ImageLoader
+	- Grapesc\GrapeFluid\PhotoGallery\ImageUploader
