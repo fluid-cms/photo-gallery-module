@@ -3,6 +3,7 @@
 namespace Grapesc\GrapeFluid\PhotoGallery;
 use Grapesc\GrapeFluid\PhotoGalleryModule\Model\PhotoModel;
 use Nette\Http\FileUpload;
+use Nette\Utils\ImageException;
 
 
 /**
@@ -40,7 +41,8 @@ class ImageUploader
 			if ($fileUpload->isOk() AND $fileUpload->isImage()) {
 				$filename = $this->getUniqueName($fileUpload->getSanitizedName());
 				$filePath = $this->imageRepository->getGalleryPath($galleryId, true) . DIRECTORY_SEPARATOR . $filename;
-				if ($fileUpload->toImage()->save($filePath)) {
+				try {
+					$fileUpload->toImage()->save($filePath);
 					$this->photoModel->insert([
 						'name'                    => $fileUpload->getName(),
 						'filepath'                => $filePath,
@@ -51,6 +53,9 @@ class ImageUploader
 					]);
 					$isFirstInGallery = false;
 					$processedCount++;
+
+				} catch (ImageException $e) {
+
 				}
 			}
 		}

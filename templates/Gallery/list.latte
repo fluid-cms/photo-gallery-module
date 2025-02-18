@@ -1,7 +1,7 @@
 {block title}Fotogalerie{/block}
 
 {block content}
-    {foreach $galleries AS $gallery}
+    {foreach $galleries as $gallery}
         <a n:href="default, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name)">{$gallery->name}</a>{sep}, {/sep}
     {/foreach}
 {/block}

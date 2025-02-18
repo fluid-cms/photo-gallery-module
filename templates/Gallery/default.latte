@@ -11,10 +11,10 @@
 
     <p n:if="$gallery->description">{$gallery->description}</p>
 
-    {magicControl photoGallery, ["gallery-" . $gallery->id, $gallery->id], 'unitegallery'}
+    {magicControl photoGallery ["gallery-" . $gallery->id, $gallery->id], 'unitegallery'}
 
     <div n:if="isset($gallery->enable_comments) && $gallery->enable_comments" class="cst-heading">
         <h2>Komentáře</h2>
-        {magicControl comment, ['commentGallery', 'gallery-'. $gallery->id]}
+        {magicControl comment ['commentGallery', 'gallery-'. $gallery->id]}
     </div>
 {/block}

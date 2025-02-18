@@ -30,7 +30,7 @@ class ImageRepository
 	private $parametersRepository;
 
 
-	public function __construct($directoryPath, $galleryIdPrefix = "gallery-", PhotoModel $photoModel, GalleryModel $galleryModel, BaseParametersRepository $parametersRepository)
+	public function __construct($directoryPath, $galleryIdPrefix = "gallery-", PhotoModel $photoModel = null, GalleryModel $galleryModel = null, BaseParametersRepository $parametersRepository = null)
 	{
 		if (!is_dir($directoryPath)) {
 			if (!@mkdir($directoryPath, $parametersRepository->getParam('dirPerm'), true)) {

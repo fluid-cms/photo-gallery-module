@@ -1,5 +1,5 @@
 <div id="gallery-id-{$gallery->id}">
-    {foreach $photos AS $photo}
+    {foreach $photos as $photo}
         <img alt="{$photo->name}"
              src="{plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, '728x390'}"
              data-image="{plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, 'original'}"

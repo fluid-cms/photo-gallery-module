@@ -18,7 +18,7 @@ class GalleryGrid extends FluidGrid
 	public $imageRepository;
 
 
-	protected function build()
+	protected function build(): void
 	{
 		$this->setItemsPerPage(15);
 		$this->skipColumns(["keywords", "created_by_id", "author_name", "enable_comments", "description"]);

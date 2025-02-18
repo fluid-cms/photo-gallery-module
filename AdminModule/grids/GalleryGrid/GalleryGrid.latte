@@ -21,11 +21,11 @@
 {define body-cell-is_publish}
     <td n:class="text-center, $record->is_publish ? text-success : text-danger">
         {if $record->is_publish}
-            <a class="tw-ajax" href="{$grid->link('rowAction!', [action => 'changePublish', primary => ($record |primaryToString)])}">
+            <a class="tw-ajax" href="{$grid->link('rowAction!', [name => 'changePublish', primary => ($record |primaryToString)])}">
                 <span data-toggle="tooltip" title="Galerie je publikována, kliknutím zrušíte publikaci" class="text-success"><i class="fa fa-check"></i> Ano</span>
             </a>
         {else}
-            <a class="tw-ajax" href="{$grid->link('rowAction!', [action => 'changePublish', primary => ($record |primaryToString)])}">
+            <a class="tw-ajax" href="{$grid->link('rowAction!', [name => 'changePublish', primary => ($record |primaryToString)])}">
                 <span data-toggle="tooltip" title="Kliknutím galerii publikujete" class="text-danger"><i class="fa fa-remove"></i> Ne</span>
             </a>
         {/if}

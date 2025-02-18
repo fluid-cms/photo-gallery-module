@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="row" n:snippet="photos">
-                        {foreach $gallery->related('photogallery_photo.photogallery_gallery_id') AS $photo}
+                        {foreach $gallery->related('photogallery_photo.photogallery_gallery_id') as $photo}
                             <div class="col-lg-2 col-md-3 col-xs-4 col-sm-6">
                                 <div class="thumbnail" n:attr="style => $photo->is_main ? 'border-color: #4caf50'">
                                     <div class="image-in-thumbnail" style="background-image: url({plink :PhotoGallery:Photo:, $gallery->id, \Nette\Utils\Strings::webalize($gallery->name), $photo->filename, '320x240'});" title="{$photo->description}" alt="{$photo->description}">

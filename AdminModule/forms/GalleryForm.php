@@ -82,7 +82,7 @@ class GalleryForm extends FluidForm
 		parent::onSuccessEvent($control, $form);
 
 		$presenter = $control->getPresenter();
-		$values    = $form->getValues(true);
+		$values    = $form->getValues('array');
 
 		if ($values['id']) {
 			$this->model->update($values, $values['id']);
@@ -94,7 +94,7 @@ class GalleryForm extends FluidForm
 			$values['created_by_id'] = $this->user->getId();
 			$values['created_on']    = new DateTime();
 
-			$createdId = $this->model->insert($values);
+			$createdId = $this->model->insert($values)->id;
 			$presenter->flashMessage("Galerie vytvořena, můžete nahrát fotografie", "success");
 			$presenter->redirect("galleryPhotos", $createdId);
 		}
